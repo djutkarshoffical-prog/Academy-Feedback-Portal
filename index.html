@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vision Academy of Education - Feedback Form</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url("IMG_0011 - Copy.JPG") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.95);
+      margin: 40px auto;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    h1 {
+      text-align: center;
+      color: #2b4c7e;
+    }
+    .input-group {
+      margin: 15px 0;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #333;
+    }
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+    .teacher {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+    .teacher h3 {
+      margin: 0 0 10px;
+      color: #444;
+    }
+    label {
+      margin-right: 15px;
+      font-size: 15px;
+    }
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #2b4c7e;
+      color: white;
+      border: none;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .submit-btn:hover {
+      background: #1d3659;
+    }
+    #downloadBtn {
+      display: none;
+      margin-top: 15px;
+      background: green;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Vision Academy of Education <br> Feedback Form</h1>
+
+    <form id="feedbackForm">
+      <div class="input-group">
+        <label for="name">Your Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+      </div>
+
+      <div class="input-group">
+        <label for="class">Your Class:</label>
+        <select id="class" name="class" required>
+          <option value="">--Select your class--</option>
+          <option value="11th">11th</option>
+          <option value="12th">12th</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="email">Your Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email address" required />
+      </div>
+
+      <div class="teacher">
+        <h3>Akshay Awari Sir ( Physics )</h3>
+        <label><input type="radio" name="physics" value="Poor" required /> Poor</label>
+        <label><input type="radio" name="physics" value="Average" /> Average</label>
+        <label><input type="radio" name="physics" value="Good" /> Good</label>
+        <label><input type="radio" name="physics" value="Excellent" /> Excellent</label>
+      </div>
+
+      <div class="teacher">
+        <h3>Gaurav Mangle Sir ( Chemistry )</h3>
+        <label><input type="radio" name="chemistry" value="Poor" required /> Poor</label>
+        <label><input type="radio" name="chemistry" value="Average" /> Average</label>
+        <label><input type="radio" name="chemistry" value="Good" /> Good</label>
+        <label><input type="radio" name="chemistry" value="Excellent" /> Excellent</label>
+      </div>
+
+      <div class="teacher">
+        <h3>Laxmikant Parate Sir ( Maths )</h3>
+        <label><input type="radio" name="maths" value="Poor" required /> Poor</label>
+        <label><input type="radio" name="maths" value="Average" /> Average</label>
+        <label><input type="radio" name="maths" value="Good" /> Good</label>
+        <label><input type="radio" name="maths" value="Excellent" /> Excellent</label>
+      </div>
+
+      <div class="teacher">
+        <h3>Ritesh Thakur Sir ( Biology )</h3>
+        <label><input type="radio" name="biology" value="Poor" required /> Poor</label>
+        <label><input type="radio" name="biology" value="Average" /> Average</label>
+        <label><input type="radio" name="biology" value="Good" /> Good</label>
+        <label><input type="radio" name="biology" value="Excellent" /> Excellent</label>
+      </div>
+
+      <div class="teacher">
+        <h3>Disha Diyewar Mam ( Behaviour )</h3>
+        <label><input type="radio" name="disha" value="Poor" required /> Poor</label>
+        <label><input type="radio" name="disha" value="Average" /> Average</label>
+        <label><input type="radio" name="disha" value="Good" /> Good</label>
+        <label><input type="radio" name="disha" value="Excellent" /> Excellent</label>
+      </div>
+
+      <button type="submit" class="submit-btn">📥 Submit Feedback</button>
+    </form>
+
+    <button id="downloadBtn" class="submit-btn">⬇ Download Excel (Only for Authorized User)</button>
+  </div>
+
+  <script>
+    const allowedEmail = "djutkarshoffical@gmail.com";
+    let feedbackList = JSON.parse(localStorage.getItem("feedbackList") || "[]");
+
+    const form = document.getElementById("feedbackForm");
+    const emailInput = document.getElementById("email");
+    const downloadBtn = document.getElementById("downloadBtn");
+
+    // Show/hide download button based on email input
+    function checkDownloadAccess(email) {
+      if (email.trim().toLowerCase() === allowedEmail) {
+        downloadBtn.style.display = "block";
+      } else {
+        downloadBtn.style.display = "none";
+      }
+    }
+
+    emailInput.addEventListener("input", () => {
+      checkDownloadAccess(emailInput.value);
+    });
+
+    // Initially check on page load
+    checkDownloadAccess(emailInput.value);
+
+    // Form submission
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value.trim();
+      const studentClass = document.getElementById("class").value;
+      const email = emailInput.value.trim().toLowerCase();
+      const physics = document.querySelector('input[name="physics"]:checked').value;
+      const chemistry = document.querySelector('input[name="chemistry"]:checked').value;
+      const maths = document.querySelector('input[name="maths"]:checked').value;
+      const biology = document.querySelector('input[name="biology"]:checked').value;
+      const disha = document.querySelector('input[name="disha"]:checked').value;
+
+      // Check duplicate feedback by same name and email
+      const exists = feedbackList.some(fb => fb.Name === name && fb.Email === email);
+
+      if (exists) {
+        alert("⚠ You have already submitted feedback with this name and email!");
+        return;
+      }
+
+      const newFeedback = {
+        Name: name,
+        Class: studentClass,
+        Email: email,
+        Physics: physics,
+        Chemistry: chemistry,
+        Maths: maths,
+        Biology: biology,
+        "Disha Ma'am": disha
+      };
+
+      feedbackList.push(newFeedback);
+      localStorage.setItem("feedbackList", JSON.stringify(feedbackList));
+
+      alert("✅ Thank you! Your feedback has been saved.");
+      form.reset();
+      checkDownloadAccess("");
+    });
+
+    // Download Excel button click
+    downloadBtn.addEventListener("click", () => {
+      if (feedbackList.length === 0) {
+        alert("No feedback data available to download!");
+        return;
+      }
+
+      const worksheet = XLSX.utils.json_to_sheet(feedbackList);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "All Feedbacks");
+
+      XLSX.writeFile(workbook, "all_student_feedbacks.xlsx");
+    });
+  </script>
+</body>
+</html>
